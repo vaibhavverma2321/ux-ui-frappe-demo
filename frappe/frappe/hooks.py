@@ -3,11 +3,11 @@ import os
 from . import __version__ as app_version
 
 app_name = "frappe"
-app_title = "F2P Core"
+app_title = "Core"
 app_publisher = "Frappe Technologies"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_license = "MIT"
-app_logo_url = "/files/Post_bank_logo.jpg"
+app_logo_url = "/files/BEAM%20LOGO%201%20(1).svg"
 develop_version = "15.x.x-develop"
 app_home = "/app/build"
 
@@ -581,3 +581,67 @@ user_invitation = {
 		"System Manager": [],
 	},
 }
+
+fixtures = [
+	{
+		"doctype": "Role",
+		"filters": [
+			["role_name", "in",
+				[
+				"Admin"
+				]
+			]
+		],
+	},
+	{
+		"doctype": "Role Profile",
+		"filters": [
+			["name", "in",
+				[
+					"Admin"
+				]
+			]
+		],
+	},
+	{
+		"doctype": "Module Profile",
+		"filters": [
+			["name", "in",
+				[
+					"Admin"
+				]
+			]
+		],
+	},
+	{
+	"doctype": "Custom DocPerm",
+	"filters": [
+		["role", "in",
+   			[
+				"Admin"
+			]
+		]
+	]
+	},
+	# {
+	# 	"doctype": "Dashboard Chart",
+	# 	"filters": [
+	# 		["name", "in", ["Total Customers", "Total Suppliers", "Daily Recipe Insights"]]
+	# 	],
+	# },
+	{
+  		"doctype": "Workspace",
+  		"filters": [
+    		["module", "in", [
+      		"Dashboard",
+			"Orders",
+			"Shipments",
+			"Inventory",
+			"Documents",
+			"Contacts",
+			"Reports",
+			"Settings"
+
+    ]]
+  ]
+}]

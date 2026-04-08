@@ -1,0 +1,104 @@
+[
+ {
+  "block_modules": [
+   {
+    "module": "Accounts"
+   },
+   {
+    "module": "Assets"
+   },
+   {
+    "module": "Automation"
+   },
+   {
+    "module": "Bulk Transaction"
+   },
+   {
+    "module": "Buying"
+   },
+   {
+    "module": "Communication"
+   },
+   {
+    "module": "Contacts"
+   },
+   {
+    "module": "Core"
+   },
+   {
+    "module": "CRM"
+   },
+   {
+    "module": "Custom"
+   },
+   {
+    "module": "Desk"
+   },
+   {
+    "module": "EDI"
+   },
+   {
+    "module": "Email"
+   },
+   {
+    "module": "ERPNext Integrations"
+   },
+   {
+    "module": "Geo"
+   },
+   {
+    "module": "Integrations"
+   },
+   {
+    "module": "Maintenance"
+   },
+   {
+    "module": "Manufacturing"
+   },
+   {
+    "module": "Portal"
+   },
+   {
+    "module": "Printing"
+   },
+   {
+    "module": "Projects"
+   },
+   {
+    "module": "Quality Management"
+   },
+   {
+    "module": "Regional"
+   },
+   {
+    "module": "Setup"
+   },
+   {
+    "module": "Stock"
+   },
+   {
+    "module": "Subcontracting"
+   },
+   {
+    "module": "Support"
+   },
+   {
+    "module": "Telephony"
+   },
+   {
+    "module": "Utilities"
+   },
+   {
+    "module": "Website"
+   },
+   {
+    "module": "Workflow"
+   }
+  ],
+  "docstatus": 0,
+  "doctype": "Module Profile",
+  "modified": "2026-04-08 10:54:57.212850",
+  "module_profile_name": "Admin",
+  "name": "Admin"
+ }
+]

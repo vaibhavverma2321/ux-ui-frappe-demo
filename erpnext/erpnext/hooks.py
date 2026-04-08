@@ -1,5 +1,5 @@
 app_name = "erpnext"
-app_title = "F2P"
+app_title = "ERP"
 app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = """ERP made simple"""
 app_icon = "fa fa-th"
@@ -13,7 +13,7 @@ app_home = "/app/home"
 add_to_apps_screen = [
 	{
 		"name": app_name,
-		"logo": "/files/Post_bank_logo.jpg",
+		"logo": "/files/BEAM%20LOGO%201%20(1).svg",
 		"title": app_title,
 		"route": app_home,
 		"has_permission": "erpnext.check_app_permission",
