@@ -1,12 +1,14 @@
 frappe.provide("erpnext.demo");
 
 $(document).on("toolbar_setup", function () {
-	if (frappe.boot.sysdefaults.demo_company) {
+	if (frappe.session.user === "Administrator" && frappe.boot.sysdefaults.demo_company) {
 		render_clear_demo_action();
 	}
 });
 
 function render_clear_demo_action() {
+	if (frappe.session.user !== "Administrator") return;
+
 	let demo_action = $(
 		`<a class="dropdown-item" onclick="return erpnext.demo.clear_demo()">
 			${__("Clear Demo Data")}
@@ -17,6 +19,8 @@ function render_clear_demo_action() {
 }
 
 erpnext.demo.clear_demo = function () {
+	if (frappe.session.user !== "Administrator") return;
+
 	frappe.confirm(__("Are you sure you want to clear all demo data?"), () => {
 		frappe.call({
 			method: "erpnext.setup.demo.clear_demo_data",

@@ -1,14 +1,15 @@
-<a class="app-switcher-dropdown" style="text-decoration: none;">
+<a class="app-switcher-dropdown {% if (!can_switch_apps) { %}app-switcher-disabled{% } %}" style="text-decoration: none;">
     <div class="standard-sidebar-item">
         <div class="d-flex">
             <div class="sidebar-item-icon app-logo-container">
                 <img class="app-logo"
-                    src="{%= app_logo_url %}" alt="{%= ("App Logo") %}">
+                    src="{%= app_logo_url %}" alt="{%= ("App Logo") %}" style="max-width: 100px;">
             </div>
             <div class="sidebar-item-label app-title" style="margin-left: 10px; margin-top: 1px">
                 {%= app_title %}
             </div>
         </div>
+        {% if (can_switch_apps) { %}
         <div class="sidebar-item-control">
             <button class="btn-reset drop-icon show-in-edit-mode">
                 <svg class="es-icon es-line  icon-sm" style="display: block;margin:auto;" aria-hidden="true">
@@ -16,6 +17,7 @@
                 </svg>
             </button>
         </div>
+        {% } %}
     </div>
 </a>
 

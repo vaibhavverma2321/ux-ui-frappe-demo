@@ -2,6 +2,7 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 	constructor(sidebar) {
 		this.sidebar = sidebar;
 		this.sidebar_wrapper = $(this.sidebar.wrapper.find(".body-sidebar"));
+		this.can_switch_apps = frappe.session.user === "Administrator";
 		this.drop_down_expanded = false;
 		this.make();
 		this.setup_app_switcher();
@@ -13,6 +14,7 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 			frappe.render_template("apps_switcher", {
 				app_logo_url: frappe.boot.app_data[0].app_logo_url,
 				app_title: __(frappe.boot.app_data[0].app_title),
+				can_switch_apps: this.can_switch_apps,
 			})
 		).prependTo(this.sidebar_wrapper);
 		this.app_switcher_dropdown = $(".app-switcher-dropdown");
@@ -20,12 +22,17 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 
 	setup_app_switcher() {
 		this.app_switcher_menu = $(".app-switcher-menu");
+		if (!this.can_switch_apps) {
+			this.app_switcher_dropdown.addClass("app-switcher-disabled");
+			return;
+		}
 		$(".app-switcher-dropdown").on("click", (e) => {
 			this.toggle_app_menu();
 			e.stopImmediatePropagation();
 		});
 	}
 	toggle_app_menu() {
+		if (!this.can_switch_apps) return;
 		this.toggle_active();
 		this.app_switcher_menu.toggleClass("hidden");
 	}
@@ -33,12 +40,13 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 		frappe.boot.app_data_map = {};
 		for (var app of frappe.boot.app_data) {
 			frappe.boot.app_data_map[app.app_name] = app;
-			if (app.workspaces?.length) {
+			if (this.can_switch_apps && app.workspaces?.length) {
 				this.add_app_item(app);
 			}
 		}
 	}
 	populate_apps_menu() {
+		if (!this.can_switch_apps) return;
 		this.add_private_app();
 
 		this.add_website_select();
@@ -164,6 +172,7 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 	}
 
 	set_hover() {
+		if (!this.can_switch_apps) return;
 		const me = this;
 
 		this.app_switcher_dropdown.on("mouseover", function () {
@@ -181,6 +190,7 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 	}
 
 	toggle_active() {
+		if (!this.can_switch_apps) return;
 		this.toggle_dropdown();
 		this.app_switcher_dropdown.toggleClass("active-sidebar");
 		if (!this.sidebar.sidebar_expanded) {

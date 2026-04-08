@@ -22,6 +22,7 @@ frappe.views.Workspace = class Workspace {
 		this.wrapper = $(wrapper);
 		this.page = wrapper.page;
 		this.blocks = frappe.workspace_block.blocks;
+		this.can_manage_workspaces = frappe.session.user === "Administrator";
 		this.is_read_only = true;
 		this.pages = {};
 		this.current_page = {};
@@ -68,13 +69,13 @@ frappe.views.Workspace = class Workspace {
 		</div>
 		<div class="editor-js-container"></div>
 		<div class="workspace-footer">
-			<button data-label="New" class="btn btn-default ellipsis btn-new-workspace">
+			<button data-label="New" class="btn btn-default ellipsis btn-new-workspace ${this.can_manage_workspaces ? "" : "hide"}">
 				<svg class="es-icon es-line icon-xs" style="" aria-hidden="true">
 					<use class="" href="#es-line-add"></use>
 				</svg>
 				<span class="hidden-xs" data-label="New">${__("New")}</span>
 			</button>
-			<button class="btn btn-default btn-sm mr-2 btn-edit-workspace" data-label="Edit">
+			<button class="btn btn-default btn-sm mr-2 btn-edit-workspace ${this.can_manage_workspaces ? "" : "hide"}" data-label="Edit">
 				<svg class="es-icon es-line  icon-xs" style="" aria-hidden="true">
 					<use class="" href="#es-line-edit"></use>
 				</svg>
@@ -83,20 +84,22 @@ frappe.views.Workspace = class Workspace {
 		</div>
 	`).appendTo(this.body);
 
-		this.body.find(".btn-new-workspace").on("click", () => {
-			this.initialize_new_page(true);
-		});
-
-		this.body.find(".btn-edit-workspace").on("click", async () => {
-			if (!this.editor || !this.editor.readOnly) return;
-			this.is_read_only = false;
-			await this.editor.readOnly.toggle();
-			this.editor.isReady.then(() => {
-				this.setup_customization_buttons(this._page);
-				this.make_blocks_sortable();
-				frappe.app.sidebar.toggle_sorting();
+		if (this.can_manage_workspaces) {
+			this.body.find(".btn-new-workspace").on("click", () => {
+				this.initialize_new_page(true);
 			});
-		});
+
+			this.body.find(".btn-edit-workspace").on("click", async () => {
+				if (!this.editor || !this.editor.readOnly) return;
+				this.is_read_only = false;
+				await this.editor.readOnly.toggle();
+				this.editor.isReady.then(() => {
+					this.setup_customization_buttons(this._page);
+					this.make_blocks_sortable();
+					frappe.app.sidebar.toggle_sorting();
+				});
+			});
+		}
 	}
 
 	get_pages() {
@@ -290,6 +293,10 @@ frappe.views.Workspace = class Workspace {
 		}
 
 		this.clear_page_actions();
+		if (!this.can_manage_workspaces) {
+			this.body.find(".btn-edit-workspace, .btn-new-workspace").addClass("hide");
+			return;
+		}
 		if (current_page.is_editable) {
 			this.body.find(".btn-edit-workspace").removeClass("hide");
 		} else {
@@ -384,6 +391,7 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	initialize_new_page() {
+		if (!this.can_manage_workspaces) return;
 		var me = this;
 		this.get_parent_pages();
 		const d = new frappe.ui.Dialog({
