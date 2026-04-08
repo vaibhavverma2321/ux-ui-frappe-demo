@@ -24,6 +24,7 @@ from frappe.twofactor import (
 from frappe.utils import cint, date_diff, datetime, get_datetime, today
 from frappe.utils.password import check_password, get_decrypted_password
 from frappe.website.utils import get_home_page
+from frappe.utils.oauth import is_admin_first_login
 
 SAFE_HTTP_METHODS = frozenset(("GET", "HEAD", "OPTIONS"))
 UNSAFE_HTTP_METHODS = frozenset(("POST", "PUT", "DELETE", "PATCH"))
@@ -116,7 +117,7 @@ class HTTPRequest:
 
 
 class LoginManager:
-	__slots__ = ("full_name", "info", "resume", "user", "user_lang", "user_type")
+	__slots__ = ("full_name", "info", "is_first_login", "resume", "user", "user_lang", "user_type")
 
 	def __init__(self):
 		self.user = None
@@ -168,6 +169,7 @@ class LoginManager:
 		validate_ip_address(self.user)
 		self.validate_hour()
 		self.get_user_info()
+		self.is_first_login = not frappe.db.get_value("User", self.user, "last_login")
 		self.make_session(session_end=session_end, audit_user=audit_user)
 		self.setup_boot_cache()
 		self.set_user_info()
@@ -199,6 +201,8 @@ class LoginManager:
 			if not resume:
 				frappe.local.response["message"] = "Logged In"
 				frappe.local.response["home_page"] = get_default_path() or "/app"
+				if is_admin_first_login(desk_user=True):
+					frappe.local.response["home_page"] = "/app/dashboard"
 
 		if not resume:
 			frappe.response["full_name"] = self.full_name

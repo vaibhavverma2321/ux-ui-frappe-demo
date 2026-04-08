@@ -63,6 +63,18 @@ def get_oauth_keys(provider: str) -> dict[str, str]:
 	}
 
 
+def is_admin_first_login(desk_user: bool | None = None) -> bool:
+	"""Return True when the current login is the user's first desk login and they have the admin role."""
+	if desk_user is False:
+		return False
+
+	login_manager = getattr(frappe.local, "login_manager", None)
+	if not login_manager or not getattr(login_manager, "is_first_login", False):
+		return False
+
+	return any(role.lower() == "admin" for role in frappe.get_roles())
+
+
 def get_oauth2_authorize_url(provider: str, redirect_to: str) -> str:
 	flow = get_oauth2_flow(provider)
 
@@ -316,6 +328,8 @@ def redirect_post_login(desk_user: bool, redirect_to: str | None = None, provide
 
 	if not redirect_to:
 		desk_uri = "/app/workspace" if provider == "facebook" else get_default_path()
+		if is_admin_first_login(desk_user=desk_user):
+			desk_uri = "/app/dashboard"
 		redirect_to = frappe.utils.get_url(desk_uri if desk_user else "/me")
 
 	frappe.local.response["location"] = redirect_to
